@@ -1,6 +1,7 @@
 TEMP_DIR = release_temp
 EXECUTABLE_NAME = xcresource
 
+XCRESOURCE_URL = https://github.com/nearfri/XCResource.git
 ARTIFACTBUNDLE = $(EXECUTABLE_NAME).artifactbundle
 ARTIFACTBUNDLE_PATH = $(TEMP_DIR)/$(ARTIFACTBUNDLE)
 ARTIFACTBUNDLE_ZIP = $(ARTIFACTBUNDLE).zip
@@ -58,7 +59,7 @@ default-release: release
 release: release-local-process release-remote-process _finish_release
 
 .PHONY: release-local-process
-release-local-process: _ask-new-version _download_artifacebundle _update-manifest
+release-local-process: _ask-new-version _download_artifacebundle _update-manifest _update_plugin_code build-test
 
 .PHONY: print-version
 print-version:
@@ -88,12 +89,27 @@ _check_git:
 .PHONY: _download_artifacebundle
 _download_artifacebundle:
 	mkdir -p $(TEMP_DIR)
-	curl -L -O "$(ARTIFACTBUNDLE_ZIP_PATH)" "$(ARTIFACTBUNDLE_ZIP_URL)"
+	curl -L -o "$(ARTIFACTBUNDLE_ZIP_PATH)" "$(ARTIFACTBUNDLE_ZIP_URL)"
 
 .PHONY: _update-manifest
 _update-manifest:
 	@sed -E -i '' "s/(.*url: .*download\/)(.+)(\/xcresource\.artifact.*)/\1$(NEW_VERSION)\3/" $(MANIFEST_PATH); \
 	sed -E -i '' "s/(.*checksum: \")([^\"]+)(\".*)/\1$(ARTIFACTBUNDLE_CHECKSUM)\3/" $(MANIFEST_PATH)
+
+.PHONY: _update_plugin_code
+_update_plugin_code:
+	mkdir -p $(TEMP_DIR)
+	
+	cd $(TEMP_DIR); \
+	git clone $(XCRESOURCE_URL); \
+	cd XCResource; \
+	git checkout $(NEW_VERSION)
+
+	cp $(TEMP_DIR)/XCResource/Plugins/RunXCResource/* Plugins/RunXCResource/
+
+.PHONY: build-test
+build-test:
+	swift package plugin run-xcresource --allow-writing-to-package-directory --help > /dev/null
 
 .PHONY: release-remote-process
 release-remote-process: _git-commit _create-release _update-release-notes _open-release-page
