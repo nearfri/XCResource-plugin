@@ -160,7 +160,7 @@ _generate-release-notes-file:
 	| tr -d '\r' \
 	> $(RELEASE_NOTES_PATH)
 
-	@echo '\n$(ADDITIONAL_RELEASE_NOTES)' >> $(RELEASE_NOTES_PATH)
+	@echo '$(ADDITIONAL_RELEASE_NOTES)' > $(RELEASE_NOTES_PATH)
 
 .PHONY: _open-release-page
 _open-release-page:
