@@ -5,6 +5,6 @@
 ### Swift Package Manager snippet
 ```swift
 dependencies: [
-    .package(url: "https://github.com/nearfri/XCResource-plugin", from: "<version>"),
+    .package(url: "https://github.com/nearfri/XCResource-plugin.git", from: "<version>"),
 ]
 ```
