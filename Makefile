@@ -105,7 +105,8 @@ _update_plugin_code:
 	cd XCResource; \
 	git checkout $(NEW_VERSION)
 
-	cp $(TEMP_DIR)/XCResource/Plugins/RunXCResource/* Plugins/RunXCResource/
+	rm -rf Plugins/RunXCResource
+	cp -r $(TEMP_DIR)/XCResource/Plugins/RunXCResource Plugins/
 
 .PHONY: build-test
 build-test:
