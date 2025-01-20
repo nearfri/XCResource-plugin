@@ -105,12 +105,12 @@ _update_plugin_code:
 	cd XCResource; \
 	git checkout $(NEW_VERSION)
 
-	rm -rf Plugins/RunXCResource
-	cp -r $(TEMP_DIR)/XCResource/Plugins/RunXCResource Plugins/
+	rm -rf Plugins/GenerateResourceCode
+	cp -r $(TEMP_DIR)/XCResource/Plugins/GenerateResourceCode Plugins/
 
 .PHONY: build-test
 build-test:
-	swift package plugin run-xcresource --allow-writing-to-package-directory --help > /dev/null
+	swift package plugin generate-resource-code --allow-writing-to-package-directory --help > /dev/null
 
 .PHONY: release-remote-process
 release-remote-process: _git-commit _create-release _update-release-notes _open-release-page

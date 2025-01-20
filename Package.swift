@@ -6,20 +6,21 @@ import PackageDescription
 let package = Package(
     name: "XCResource",
     products: [
-        .plugin(name: "RunXCResource", targets: ["RunXCResource"]),
+        .plugin(name: "Generate Resource Code", targets: ["Generate Resource Code"]),
     ],
     targets: [
         .plugin(
-            name: "RunXCResource",
+            name: "Generate Resource Code",
             capability: .command(
                 intent: .custom(
-                    verb: "run-xcresource",
-                    description: "Run XCResource to generate symbols for assets or strings."),
+                    verb: "generate-resource-code",
+                    description: "Generate source code for resources."),
                 permissions: [
                     .writeToPackageDirectory(
-                        reason: "Write symbol files in the package direcotry")
+                        reason: "Generate and write source code into the package direcotry")
                 ]),
-            dependencies: ["xcresource"]),
+            dependencies: ["xcresource"],
+            path: "Plugins/GenerateResourceCode"),
         .binaryTarget(
             name: "xcresource",
             url: "https://github.com/nearfri/XCResource/releases/download/0.11.5/xcresource.artifactbundle.zip",
